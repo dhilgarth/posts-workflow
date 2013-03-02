@@ -102,6 +102,7 @@ def GetDraftFilename(drafts_dir, new_post_ext, draft_specification)
 end
 
 def FindMatchingDrafts(drafts_dir, new_post_ext, draft_specification)
+  draft_specification = draft_specification.downcase
   matchingFiles = Array.new
   GetAllDrafts(drafts_dir, new_post_ext).each do |f| 
     matchingFiles.push(f) if f.include?(draft_specification)
