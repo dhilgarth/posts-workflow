@@ -72,11 +72,19 @@ desc "Shows a list of all drafts. If a draft specification has been supplied onl
 task :list_drafts, :draft_specification do |t, args|
   draft_specification = args.draft_specification
   if draft_specification.nil?
-    drafts = GetAllDrafts(drafts_dir, new_post_ext).join("\n") 
-    puts "All available drafts:\n#{drafts}"
+    drafts = GetAllDrafts(drafts_dir, new_post_ext)
+    if drafts.count() == 0
+      puts "No drafts available!"
+    else
+      puts "All available drafts:\n" + drafts.join("\n")
+    end
   else  
-    drafts = FindMatchingDrafts(drafts_dir, new_post_ext, draft_specification).join("\n")
-    puts "Available drafts with specification '#{draft_specification}':\n#{drafts}"
+    drafts = FindMatchingDrafts(drafts_dir, new_post_ext, draft_specification)
+    if drafts.count() == 0
+      puts "No drafts available for specification '#{draft_specification}'!"
+    else
+      puts "Available drafts with specification '#{draft_specification}':\n" + drafts.join("\n")
+    end
   end
 end
 
