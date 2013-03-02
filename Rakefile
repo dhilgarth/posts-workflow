@@ -123,7 +123,7 @@ end
 def GetAllDrafts(drafts_dir, new_post_ext)
     drafts = Array.new
     Dir.foreach(drafts_dir) { |f| drafts.push(f) if File.file?("#{drafts_dir}/#{f}") and File.extname("#{drafts_dir}/#{f}") == ".#{new_post_ext}" }
-    answer = drafts;
+    return drafts
 end
 
 def GetDraftFilename(drafts_dir, new_post_ext, draft_specification)
@@ -138,7 +138,7 @@ def GetDraftFilename(drafts_dir, new_post_ext, draft_specification)
     draft_filename = possible_drafts[0]
     abort("rake aborted") if ask("Found possible draft '#{draft_filename}'. Did you mean this one?", ['y', 'n']) == 'n'
   end
-  answer = draft_filename
+  return draft_filename
 end
 
 def FindMatchingDrafts(drafts_dir, new_post_ext, draft_specification)
@@ -147,7 +147,7 @@ def FindMatchingDrafts(drafts_dir, new_post_ext, draft_specification)
   GetAllDrafts(drafts_dir, new_post_ext).each do |f| 
     matchingFiles.push(f) if f.include?(draft_specification)
   end
-  answer = matchingFiles
+  return matchingFiles
 end
 
 def get_stdin(message)
@@ -158,10 +158,10 @@ end
 def ask(message, valid_options)
   if valid_options
     answer = get_stdin("#{message} #{valid_options.to_s.gsub(/"/, '').gsub(/, /,'/')} ") while !valid_options.include?(answer)
+    return answer
   else
-    answer = get_stdin(message)
+    return get_stdin(message)
   end
-  answer
 end
 
 def to_boolean(s)
