@@ -3,7 +3,9 @@ GEM
   specs:
     git (1.2.5)
     logger (1.2.8)
+    preamble (0.0.2)
     rake (0.9.6)
+    stringex (1.4.0)
 
 PLATFORMS
   x86-mingw32
@@ -11,4 +13,6 @@ PLATFORMS
 DEPENDENCIES
   git
   logger
+  preamble
   rake (~> 0.9)
+  stringex (~> 1.4.0)

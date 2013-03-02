@@ -3,6 +3,7 @@ require "fileutils"
 require "stringex"
 require "git"
 require "logger"
+require "preamble"
 
 ## -- Configs -- ##
 
@@ -24,7 +25,16 @@ task :new_draft, :title, :commit do |t, args|
     abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
   end
   puts "Creating new draft: #{filename}"
-  FileUtils.touch filename
+    open(filename, 'w') do |post|
+    post.puts "---"
+    post.puts "layout: post"
+    post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
+    post.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
+    post.puts "comments: true"
+    post.puts "published: false"
+    post.puts "categories: "
+    post.puts "---"
+  end
 
   if args.commit
     commit = to_boolean(args.commit)
@@ -51,26 +61,45 @@ task :publish_draft, :draft, :commit, :title do |t, args|
   draft_filename = GetDraftFilename(drafts_dir, new_post_ext, draft_filename)
   draft_file = "#{drafts_dir}/#{draft_filename}"
   abort("Specified draft not found") unless File.exist?(draft_file)
+  draft_content = ""
+  front_matter = []
+  begin
+    data = Preamble.load(draft_file)
+    abort("The file you want to publish is empty.") if !data[0]
+    abort("The file you want to publish doesn't contain any content.") if data[1].empty?
+    draft_content = data[1]
+    front_matter = data[0]
+    title = front_matter["title"]
+    title.strip! unless title.nil?
+    front_matter.delete("title")
+    front_matter.delete("date")
+    front_matter.delete("published")
+  rescue
+    abort("rake aborted!") if ask("The YAML front matter seems to be invalid: #{$!.message}\nDo you want to treat the complete file as content?", ['y', 'n']) == 'n'
+    draft_content = File.read(draft_file)
+  end
+
   if args.title
     title = args.title
+    title.strip!
   else
-    title = %r/\d{4}-\d{2}-\d{2}-(.*?)\.#{new_post_ext}/.match(draft_filename)[1]
+    title = %r/\d{4}-\d{2}-\d{2}-(.*?)\.#{new_post_ext}/.match(draft_filename)[1] if title.empty?
   end
+  
   mkdir_p "#{drafts_dir}"
   filename = "#{publish_dir}/#{Time.now.strftime('%Y-%m-%d')}-#{title.to_url}.#{new_post_ext}"
   if File.exist?(filename)
     abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
   end
+  
+  AddDefaultFrontMatterProperties(front_matter, title)
+  
   puts "Publishing draft '#{draft_file}' to '#{filename}'"
   open(filename, 'w') do |post|
-    post.puts "---"
-    post.puts "layout: post"
-    post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
-    post.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
-    post.puts "comments: true"
-    post.puts "categories: "
-    post.puts "---"
-    post.puts File.read(draft_file)
+    post.puts CreateFrontMatterRepresentation(front_matter)
+    post.puts draft_content
+  end
+  
   if args.commit
     commit = to_boolean(args.commit)
   else
@@ -162,6 +191,24 @@ def ask(message, valid_options)
   else
     return get_stdin(message)
   end
+end
+
+def AddDefaultFrontMatterProperties(front_matter, title)
+  front_matter["layout"] = "post"
+  front_matter["title"] = "\"#{title.gsub(/&/,'&amp;')}\""
+  front_matter["date"] = "#{Time.now.strftime('%Y-%m-%d %H:%M')}"
+  front_matter["comments"] = true if front_matter["comments"].nil?
+  front_matter["published"] = true
+end
+
+def CreateFrontMatterRepresentation(front_matter)
+    result = "---\n"
+    front_matter.each do |key, value|
+      result << "#{key}: #{value}\n"
+    end
+    result << "---\n"
+    
+    return result
 end
 
 def to_boolean(s)

@@ -5,4 +5,5 @@ group :development do
   gem 'stringex', '~> 1.4.0'
   gem 'git'
   gem 'logger'
+  gem 'preamble'
 end
