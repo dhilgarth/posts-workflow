@@ -26,6 +26,7 @@ task :new_draft, :title do |t, args|
   puts "Creating new draft: #{filename}"
   FileUtils.touch filename
   git = Git.open(".", :log => Logger.new(STDOUT))
+  git.branch("blog").checkout
   git.add(filename)
   git.commit("Create empty draft #{filename}")
 
@@ -63,6 +64,7 @@ task :publish_draft, :draft, :title do |t, args|
   end
   File.delete(draft_file)
   git = Git.open(".", :log => Logger.new(STDOUT))
+  git.branch("blog").checkout
   git.add(filename)
   git.remove(draft_file)
   git.commit("Publish #{filename}")
