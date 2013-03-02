@@ -3,21 +3,48 @@ Contains the default layout and accompanying rake file for a two stage blogging 
 #Usage
 
 ##Step 1: Create a draft
-Execute `rake new_draft[<title>]`.  
-This will generate a new, empty file in the folder `Drafts`. The format is `yyyy-mm-dd-<title>.md` and uses the current date.  
-The empty file will automatically be committed.
+Execute `rake new_draft[<title>,<commit>]`.  
+Examples:
 
-This empty file is your draft. Write your blog post in it.
+    rake new_draft["My new post",false]
+    rake new_draft["My new post"]
+
+This will generate a new file in the folder `Drafts`. The format is `yyyy-mm-dd-<title>.md` and uses the current date.  
+It will contain a default [YAML front matter](https://github.com/mojombo/jekyll/wiki/yaml-front-matter) similar to the one [Octopress](http://octopress.org) generates, but it will have `published` set to `false` and `type` set to `draft`. The first one is honored by Octopress, the second one by Ruhoh and will result in the post not showing up in the Blog.  
+The file will automatically be committed, if `commit` has been omitted or specified as `true`. The script will ensure that you are on the branch `blog` when it commits. This is the branch that should receive all commits related to your posts.
+
+This new file is your draft. Write your blog post in it. :)
 
 ##Step 2: Publish the draft
-Execute `rake publish_draft[<draft_specification>]` or `rake publish_draft[<draft_specification>, <title>]` if you don't want to use the title from the draft.  
+When you have finished writing your blog post, execute `rake publish_draft[<draft_specification>,<commit>,<title>]`  
+Examples:
+
+    rake publish_draft["new post"]
+    rake publish_draft["new post",false]
+    rake publish_draft["new post",true,"New title"]
+
 This will create a file in the folder `Publish`. The format again is  `yyyy-mm-dd-<title>.md`.  
 It again uses the current date, i.e. it doesn't use the date from the draft.  
-If no `<title>` has been specified, the title of the draft will be used.  
-The file will contain the complete content from the draft and before that a default [YAML front matter](https://github.com/mojombo/jekyll/wiki/yaml-front-matter) similar to the one [Octopress](http://octopress.org) generates.  
+If no `<title>` has been specified, the title of the draft will be used:
 
-Please note that this script is agnostic to the blog engine you are using, as long as this engine knows how to interpret markdown files and the YAML front matter.  
-That means that files in `Publish` will not auto-magically appear on your blog :) You will have to configure your blogging engine to pick these files up.
+- If the draft contains a `title` property in its YAML front matter, it is used.
+- If that property doesn't exist, the title is extracted from the file name of the draft.
+
+The file will contain the content from the draft along with an adjusted YAML front matter:
+
+- The property "title" will be set to the new title determined above.
+- The property "date" will be set to the current date
+- The property "layout" will be set to `"post"`
+- The property "published" will be set to `true`
+- The property "type" will be removed, if it is `"draft"`
+- If the draft is missing the "comments" property, it will be added with a value of `true`; otherwise, the value from the draft will be used.
+- All other properties from the draft will be used without changes.
+
+The published post will automatically be committed, if `commit` has been omitted or specified as `true`. Again, it ensures you are on the `blog` branch.
+
+**Please note:**  
+This script is mostly agnostic to the blog engine you are using, as long as this engine knows how to interpret markdown files and the YAML front matter.  
+That means that files in `Publish` will not auto-magically appear on your blog :) You will have to configure your blog engine to pick these files up.
 
 ##Optional: View available drafts
 If you want to know which drafts are available, you can use `rake list_drafts` or `rake list_drafts[<draft_specification>]`.
