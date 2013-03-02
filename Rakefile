@@ -25,9 +25,9 @@ task :new_draft, :title do |t, args|
   end
   puts "Creating new draft: #{filename}"
   FileUtils.touch filename
-  g = Git.open(".", :log => Logger.new(STDOUT))
-  g.add(filename)
-  g.commit("Create empty draft #{filename}")
+  git = Git.open(".", :log => Logger.new(STDOUT))
+  git.add(filename)
+  git.commit("Create empty draft #{filename}")
 
 end
 
@@ -62,9 +62,9 @@ task :publish_draft, :draft, :title do |t, args|
     post.puts File.read(draft_file)
   end
   File.delete(draft_file)
-  g = Git.open(".", :log => Logger.new(STDOUT))
-  g.add(filename)
-  g.commit("Publish #{filename}")
+  git = Git.open(".", :log => Logger.new(STDOUT))
+  git.add(filename)
+  git.commit("Publish #{filename}")
 end
 
 # usage rake list_drafts[] or rake list_drafts[draft_specification] to only view the drafts matching the specification
