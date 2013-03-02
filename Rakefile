@@ -12,7 +12,7 @@ new_post_ext    = "md"  # default new post file extension when using the new_pos
 
 # usage rake new_draft[my-new-post] or rake new_draft['my new post']
 desc "Begin a new draft in #{drafts_dir}"
-task :new_draft, :title do |t, args|
+task :new_draft, :title, :commit do |t, args|
   if args.title
     title = args.title
   else
@@ -25,17 +25,27 @@ task :new_draft, :title do |t, args|
   end
   puts "Creating new draft: #{filename}"
   FileUtils.touch filename
-  git = Git.open(".", :log => Logger.new(STDOUT))
-  git.branch("blog").checkout
-  git.add(filename)
-  git.commit("Create empty draft #{filename}")
 
+  if args.commit
+    commit = to_boolean(args.commit)
+  else
+    commit = true
+  end
+
+  if commit
+    log = Logger.new(STDOUT)
+    log.level = Logger::INFO
+    git = Git.open(".", :log => log)
+    git.branch("blog").checkout
+    git.add(filename)
+    git.commit("Create empty draft #{filename}")
+  end
 end
 
 # usage rake publish_draft[draft_specification]
 # draft_specification can be any string that completely or partly and uniquly identifies the draft:
 desc "Publishes the specified draft to #{publish_dir}"
-task :publish_draft, :draft, :title do |t, args|
+task :publish_draft, :draft, :commit, :title do |t, args|
   abort("No draft specified") if args.draft.nil?
   draft_filename = args.draft
   draft_filename = GetDraftFilename(drafts_dir, new_post_ext, draft_filename)
@@ -61,13 +71,32 @@ task :publish_draft, :draft, :title do |t, args|
     post.puts "categories: "
     post.puts "---"
     post.puts File.read(draft_file)
+  if args.commit
+    commit = to_boolean(args.commit)
+  else
+    commit = true
   end
-  File.delete(draft_file)
-  git = Git.open(".", :log => Logger.new(STDOUT))
-  git.branch("blog").checkout
-  git.add(filename)
-  git.remove(draft_file)
-  git.commit("Publish #{filename}")
+  
+  if commit
+    log = Logger.new(STDOUT)
+    log.level = Logger::INFO
+    git = Git.open(".", :log => log)
+    git.branch("blog").checkout
+    git.add(filename)
+    begin
+      git.remove(draft_file)
+    rescue
+      puts "!! Could not delete local draft file '#{draft_file}'. You will have to do this manually !!"
+      system "git rm -f --cached #{draft_file}"
+    end
+    git.commit("Publish #{filename}")
+  else
+    begin
+      File.delete(draft_file)
+    rescue
+      puts "!! Could not delete local draft file '#{draft_file}'. You will have to do this manually !!"
+    end
+  end
 end
 
 # usage rake list_drafts[] or rake list_drafts[draft_specification] to only view the drafts matching the specification
@@ -133,4 +162,8 @@ def ask(message, valid_options)
     answer = get_stdin(message)
   end
   answer
+end
+
+def to_boolean(s)
+  s and !!s.match(/^(true|t|yes|y|1)$/i)
 end
