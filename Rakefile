@@ -43,7 +43,7 @@ task :new_draft, :title, :commit do |t, args|
 end
 
 # usage rake publish_draft[draft_specification]
-# draft_specification can be any string that completely or partly and uniquly identifies the draft:
+# draft_specification can be any string that completely or partly and uniquly identifies the draft.
 desc "Publishes the specified draft to #{publish_dir}"
 task :publish_draft, :draft, :commit, :title do |t, args|
   abort("No draft specified") if args.draft.nil?
