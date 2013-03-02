@@ -65,8 +65,8 @@ task :publish_draft, :draft, :commit, :title do |t, args|
   front_matter = []
   begin
     data = Preamble.load(draft_file)
-    abort("The file you want to publish is empty.") if !data[0]
-    abort("The file you want to publish doesn't contain any content.") if data[1].empty?
+    abort("The file you want to publish is empty. Publishing cancelled") if !data[0]
+    abort("The file you want to publish doesn't contain any content. Publishing cancelled") if data[1].empty?
     draft_content = data[1]
     front_matter = data[0]
     title = front_matter["title"]
