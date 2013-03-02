@@ -32,6 +32,7 @@ task :new_draft, :title, :commit do |t, args|
     post.puts "date: #{Time.now.strftime('%Y-%m-%d %H:%M')}"
     post.puts "comments: true"
     post.puts "published: false"
+    post.puts "type: draft"
     post.puts "categories: "
     post.puts "---"
   end
@@ -74,6 +75,8 @@ task :publish_draft, :draft, :commit, :title do |t, args|
     front_matter.delete("title")
     front_matter.delete("date")
     front_matter.delete("published")
+    type = front_matter["type"]
+    front_matter.delete("type") if type and front_matter["type"] == "draft"
   rescue
     abort("rake aborted!") if ask("The YAML front matter seems to be invalid: #{$!.message}\nDo you want to treat the complete file as content?", ['y', 'n']) == 'n'
     draft_content = File.read(draft_file)
