@@ -64,6 +64,7 @@ task :publish_draft, :draft, :title do |t, args|
   File.delete(draft_file)
   git = Git.open(".", :log => Logger.new(STDOUT))
   git.add(filename)
+  git.remove(draft_file)
   git.commit("Publish #{filename}")
 end
 
