@@ -1,7 +1,6 @@
 require "rubygems"
 require "fileutils"
 require "stringex"
-require "git"
 require "logger"
 require "preamble"
 
@@ -44,12 +43,9 @@ task :new_draft, :title, :commit do |t, args|
   end
 
   if commit
-    log = Logger.new(STDOUT)
-    log.level = Logger::INFO
-    git = Git.open(".", :log => log)
-    git.branch("blog").checkout
-    git.add(filename)
-    git.commit("Create empty draft #{filename}")
+    system "git checkout -b blog"
+    system "git add #{filename}"
+    system "git commit -m \"Create empty draft #{filename}\""
   end
 end
 
@@ -110,18 +106,17 @@ task :publish_draft, :draft, :commit, :title do |t, args|
   end
   
   if commit
-    log = Logger.new(STDOUT)
-    log.level = Logger::INFO
-    git = Git.open(".", :log => log)
-    git.branch("blog").checkout
-    git.add(filename)
+    system "git checkout -b blog"
+    system "git add #{draft_file}"
+    system "git commit -m \"Commit final version of #{draft_file}\""
+    system "git add #{filename}"
     begin
-      git.remove(draft_file)
+      system "git rm -f #{draft_file}"
     rescue
       puts "!! Could not delete local draft file '#{draft_file}'. You will have to do this manually !!"
       system "git rm -f --cached #{draft_file}"
     end
-    git.commit("Publish #{filename}")
+    system "git commit \"Publish #{filename}\""
   else
     begin
       File.delete(draft_file)
