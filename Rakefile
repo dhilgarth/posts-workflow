@@ -43,14 +43,14 @@ task :new_draft, :title, :commit do |t, args|
     commit = true
   end
 
+  system "\"#{editor}\" \"#{Dir.pwd}/#{filename}\""
+
   if commit
     system "git checkout -b blog"
     system "git add #{filename}"
     system "git commit -m \"Create empty draft #{filename}\""
     system "git push"
   end
-  
-  system "\"#{editor}\" \"#{Dir.pwd}/#{filename}\""
 end
 
 # usage rake publish_draft[draft_specification]
