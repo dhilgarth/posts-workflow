@@ -120,7 +120,7 @@ task :publish_draft, :draft, :commit, :title do |t, args|
       puts "!! Could not delete local draft file '#{draft_file}'. You will have to do this manually !!"
       system "git rm -f --cached #{draft_file}"
     end
-    system "git commit \"Publish #{filename}\""
+    system "git commit -m \"Publish #{filename}\""
     system "git push"
   else
     begin
