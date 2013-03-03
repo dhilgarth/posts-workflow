@@ -63,7 +63,7 @@ task :publish_draft, :draft, :commit, :title do |t, args|
   draft_file = "#{drafts_dir}/#{draft_filename}"
   abort("Specified draft not found") unless File.exist?(draft_file)
   draft_content = ""
-  front_matter = []
+  front_matter = {}
   begin
     data = Preamble.load(draft_file)
     abort("The file you want to publish is empty. Publishing cancelled") if !data[0]
