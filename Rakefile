@@ -117,12 +117,11 @@ task :publish_draft, :draft, :commit, :title do |t, args|
     system "git rm -f --cached #{draft_file}"
     system "git commit -m \"Publish #{filename}\""
     system "git push"
-  else
-    begin
-      File.delete(draft_file)
-    rescue
-      puts "!! Could not delete local draft file '#{draft_file}'. You will have to do this manually !!"
-    end
+  end
+  begin
+    File.delete(draft_file)
+  rescue
+    puts "!! Could not delete local draft file '#{draft_file}'. You will have to do this manually !!"
   end
 end
 
