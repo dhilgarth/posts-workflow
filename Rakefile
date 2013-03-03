@@ -86,7 +86,7 @@ task :publish_draft, :draft, :commit, :title do |t, args|
     title = args.title
     title.strip!
   else
-    title = %r/\d{4}-\d{2}-\d{2}-(.*?)\.#{new_post_ext}/.match(draft_filename)[1] if title.empty?
+    title = %r/\d{4}-\d{2}-\d{2}-(.*?)\.#{new_post_ext}/.match(draft_filename)[1] if title.nil? or title.empty?
   end
   
   mkdir_p "#{drafts_dir}"
