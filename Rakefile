@@ -25,7 +25,7 @@ task :new_draft, :title, :commit do |t, args|
     abort("rake aborted!") if ask("#{filename} already exists. Do you want to overwrite?", ['y', 'n']) == 'n'
   end
   puts "Creating new draft: #{filename}"
-    open(filename, 'w') do |post|
+  open(filename, 'w') do |post|
     post.puts "---"
     post.puts "layout: post"
     post.puts "title: \"#{title.gsub(/&/,'&amp;')}\""
