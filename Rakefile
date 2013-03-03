@@ -9,6 +9,7 @@ require "preamble"
 drafts_dir      = "Drafts"
 publish_dir     = "Publish"
 new_post_ext    = "md"  # default new post file extension when using the new_post task
+editor          = "C:\\Program Files (x86)\\notepad++\\notepad++.exe"
 
 # usage rake new_draft[my-new-post] or rake new_draft['my new post']
 desc "Begin a new draft in #{drafts_dir}"
@@ -47,6 +48,8 @@ task :new_draft, :title, :commit do |t, args|
     system "git add #{filename}"
     system "git commit -m \"Create empty draft #{filename}\""
   end
+  
+  system "\"#{editor}\" \"#{Dir.pwd}/#{filename}\""
 end
 
 # usage rake publish_draft[draft_specification]
