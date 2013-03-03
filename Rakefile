@@ -47,6 +47,7 @@ task :new_draft, :title, :commit do |t, args|
     system "git checkout -b blog"
     system "git add #{filename}"
     system "git commit -m \"Create empty draft #{filename}\""
+    system "git push"
   end
   
   system "\"#{editor}\" \"#{Dir.pwd}/#{filename}\""
@@ -120,6 +121,7 @@ task :publish_draft, :draft, :commit, :title do |t, args|
       system "git rm -f --cached #{draft_file}"
     end
     system "git commit \"Publish #{filename}\""
+    system "git push"
   else
     begin
       File.delete(draft_file)
