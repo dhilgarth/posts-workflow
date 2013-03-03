@@ -2,7 +2,7 @@ require "rubygems"
 require "fileutils"
 require "stringex"
 require "logger"
-require "preamble"
+require "./preamble.rb"
 
 ## -- Configs -- ##
 
