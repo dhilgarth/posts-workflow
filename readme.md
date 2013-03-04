@@ -58,7 +58,7 @@ The rakefile contains three constants you can change:
 - `new_post_ext    = "md"`: The file extension for drafts and finished posts. Is used when creating a new draft, when evaluating a draft specification and when publishing a draft.
 - `editor          = "/path/to/editor"`: The editor used to open a new draft.
 
-## What is a draft specification?
+##What is a draft specification?
 
 This can be any string uniquely identifying a draft. This comparison is not case sensitive.  
 Assume the Drafts folder contains these files:
@@ -77,3 +77,9 @@ Now, among others, the following specifications would be valid:
 - `foo`: There is only one file with the correct extension (`.md`) whose filename contains `foo`.
 - `1-fubar`: Would match `2013-03-01-Fubar.md`.
 - `-b`: Would match `2013-03-02-Bar.md`. Not really descriptive, but if you are lazy... :)
+
+##Shorthand version of tasks
+Because I am lazy, I added three shorthand tasks that just forward the parameters to the actual tasks:
+- `nd` -> `new_draft`
+- `pd` -> `publish_draft`
+- `ld` -> `list_drafts`
