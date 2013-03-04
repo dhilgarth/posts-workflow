@@ -48,7 +48,7 @@ task :new_draft, :title, :commit do |t, args|
   if commit
     system "git checkout -b blog"
     system "git add #{filename}"
-    system "git commit -m \"Create empty draft #{filename}\""
+    system "git commit -m \"Create empty draft '#{title}'\""
     system "git push"
   end
 end
@@ -115,7 +115,7 @@ task :publish_draft, :draft, :commit, :title do |t, args|
     system "git commit -m \"Commit final version of #{draft_file}\""
     system "git add #{filename}"
     system "git rm -f --cached #{draft_file}"
-    system "git commit -m \"Publish #{filename}\""
+    system "git commit -m \"Publish '#{title}'\""
     system "git push"
   end
   begin
