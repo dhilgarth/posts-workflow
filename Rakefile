@@ -146,6 +146,10 @@ task :list_drafts, :draft_specification do |t, args|
   end
 end
 
+task :nd, [:title, :commit] => :new_draft
+task :pd, [:draft, :commit, :title] => :publish_draft
+task :ld, [:draft_specification] => :list_drafts
+
 def GetAllDrafts(drafts_dir, new_post_ext)
     drafts = Array.new
     Dir.foreach(drafts_dir) { |f| drafts.push(f) if File.file?("#{drafts_dir}/#{f}") and File.extname("#{drafts_dir}/#{f}") == ".#{new_post_ext}" }
