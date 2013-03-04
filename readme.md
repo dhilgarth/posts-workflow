@@ -13,7 +13,7 @@ This will generate a new file in the folder `Drafts`. The format is `yyyy-mm-dd-
 It will contain a default [YAML front matter](https://github.com/mojombo/jekyll/wiki/yaml-front-matter) similar to the one [Octopress](http://octopress.org) generates, but it will have `published` set to `false` and `type` set to `draft`. The first one is honored by Octopress, the second one by Ruhoh and will result in the post not showing up in the Blog.  
 The file will automatically be committed, if `commit` has been omitted or specified as `true`. The script will ensure that you are on the branch `blog` when it commits. This is the branch that should receive all commits related to your posts.
 
-This new file is your draft. Write your blog post in it. :)
+This new file is your draft. It is automatically opened in your favorite editor, so you can immediately start writing your article. :)
 
 ##Step 2: Publish the draft
 When you have finished writing your blog post, execute `rake publish_draft[<draft_specification>,<commit>,<title>]`  
@@ -32,12 +32,12 @@ If no `<title>` has been specified, the title of the draft will be used:
 
 The file will contain the content from the draft along with an adjusted YAML front matter:
 
-- The property "title" will be set to the new title determined above.
-- The property "date" will be set to the current date
-- The property "layout" will be set to `"post"`
-- The property "published" will be set to `true`
-- The property "type" will be removed, if it is `"draft"`
-- If the draft is missing the "comments" property, it will be added with a value of `true`; otherwise, the value from the draft will be used.
+- The property `title` will be set to the new title determined above.
+- The property `date` will be set to the current date
+- The property `layout` will be set to `"post"`
+- The property `published` will be set to `true`
+- The property `type` will be removed, if it is `"draft"`
+- If the draft is missing the `comments` property, it will be added with a value of `true`; otherwise, the value from the draft will be used.
 - All other properties from the draft will be used without changes.
 
 The published post will automatically be committed, if `commit` has been omitted or specified as `true`. Again, it ensures you are on the `blog` branch.
@@ -56,6 +56,7 @@ The rakefile contains three constants you can change:
 - `drafts_dir      = "Drafts"`: If you want to give your drafts folder a different name. Changing the value here doesn't rename the folder in git or on the disk. You will have to do that manually.
 - `publish_dir     = "Publish"`: If you want to give a different name to the folder that contains the posts to be published. Again, no automatic renaming.
 - `new_post_ext    = "md"`: The file extension for drafts and finished posts. Is used when creating a new draft, when evaluating a draft specification and when publishing a draft.
+- `editor          = "/path/to/editor"`: The editor used to open a new draft.
 
 ## What is a draft specification?
 
