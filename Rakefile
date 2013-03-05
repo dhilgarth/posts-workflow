@@ -53,6 +53,15 @@ task :new_draft, :title, :commit do |t, args|
   end
 end
 
+task :edit_draft, :draft do |t, args|
+  abort("No draft specified") if args.draft.nil?
+  draft_filename = args.draft
+  draft_filename = GetDraftFilename(drafts_dir, new_post_ext, draft_filename)
+  draft_file = "#{drafts_dir}/#{draft_filename}"
+  abort("Specified draft not found") unless File.exist?(draft_file)
+  system "\"#{editor}\" \"#{Dir.pwd}/#{draft_file}\""
+end
+
 # usage rake publish_draft[draft_specification]
 # draft_specification can be any string that completely or partly and uniquly identifies the draft.
 desc "Publishes the specified draft to #{publish_dir}"
@@ -147,6 +156,7 @@ task :list_drafts, :draft_specification do |t, args|
 end
 
 task :nd, [:title, :commit] => :new_draft
+task :ed, [:draft] => :edit_draft
 task :pd, [:draft, :commit, :title] => :publish_draft
 task :ld, [:draft_specification] => :list_drafts
 

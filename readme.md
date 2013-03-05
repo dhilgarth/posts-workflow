@@ -49,6 +49,10 @@ That means that files in `Publish` will not auto-magically appear on your blog :
 ##Optional: View available drafts
 If you want to know which drafts are available, you can use `rake list_drafts` or `rake list_drafts[<draft_specification>]`.
 
+##Optional: Open a draft in the editor
+This is a little shortcut, so you don't have to switch to your file commander: `rake edit_draft[<draft_specification>]`.  
+This will open the draft in the editor defined in the rakefile.
+
 #Configuration
 
 The rakefile contains three constants you can change:
@@ -83,3 +87,4 @@ Because I am lazy, I added three shorthand tasks that just forward the parameter
 - `nd` -> `new_draft`
 - `pd` -> `publish_draft`
 - `ld` -> `list_drafts`
+- `ed` -> `edit_draft`
