@@ -43,7 +43,7 @@ task :new_draft, :title, :commit do |t, args|
     commit = true
   end
 
-  system "\"#{editor}\" \"#{Dir.pwd}/#{filename}\""
+  IO.popen("\"#{editor}\" \"#{Dir.pwd}/#{filename}\"")
 
   if commit
     system "git checkout -b blog"
@@ -59,7 +59,7 @@ task :edit_draft, :draft do |t, args|
   draft_filename = GetDraftFilename(drafts_dir, new_post_ext, draft_filename)
   draft_file = "#{drafts_dir}/#{draft_filename}"
   abort("Specified draft not found") unless File.exist?(draft_file)
-  system "\"#{editor}\" \"#{Dir.pwd}/#{draft_file}\""
+  IO.popen("\"#{editor}\" \"#{Dir.pwd}/#{draft_file}\"")
 end
 
 # usage rake publish_draft[draft_specification]
