@@ -9,7 +9,7 @@ require "./preamble.rb"
 drafts_dir      = "Drafts"
 publish_dir     = "Publish"
 new_post_ext    = "md"  # default new post file extension when using the new_post task
-editor          = "C:\\Program Files (x86)\\notepad++\\notepad++.exe"
+editor          = "c:\\Program Files (x86)\\MarkdownPad 2\\MarkdownPad2.exe"
 
 # usage rake new_draft[my-new-post] or rake new_draft['my new post']
 desc "Begin a new draft in #{drafts_dir}"
