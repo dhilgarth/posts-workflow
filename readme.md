@@ -55,7 +55,7 @@ This will open the draft in the editor defined in the rakefile.
 
 #Configuration
 
-The rakefile contains three constants you can change:
+The rakefile contains four constants you can change:
 
 - `drafts_dir      = "Drafts"`: If you want to give your drafts folder a different name. Changing the value here doesn't rename the folder in git or on the disk. You will have to do that manually.
 - `publish_dir     = "Publish"`: If you want to give a different name to the folder that contains the posts to be published. Again, no automatic renaming.
@@ -83,7 +83,7 @@ Now, among others, the following specifications would be valid:
 - `-b`: Would match `2013-03-02-Bar.md`. Not really descriptive, but if you are lazy... :)
 
 ##Shorthand version of tasks
-Because I am lazy, I added three shorthand tasks that just forward the parameters to the actual tasks:
+Because I am lazy, I added four shorthand tasks that just forward the parameters to the actual tasks:
 - `nd` -> `new_draft`
 - `pd` -> `publish_draft`
 - `ld` -> `list_drafts`
